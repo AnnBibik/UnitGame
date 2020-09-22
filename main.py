@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class Unit(ABC):
     _name = ''
-    _health = 100
+    _health = 0
     _attack = 0
     _defence = 0
 
