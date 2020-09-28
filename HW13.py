@@ -27,27 +27,33 @@ if __name__ == '__main__':
 # виде пронумерованного списка с помощью регулярных выражений.
 
 class License:
-    _reg = None
+    _reg = []
 
-    def __init__(self, pattern=r'\w{1,2}.\d{3}.\w{1,4}'):
-        self.pattern = pattern
+    def __init__(self, patterns):
+        self.patterns = patterns
 
     @property
-    def pattern(self):
+    def patterns(self):
         return self._reg
 
-    @pattern.setter
-    def pattern(self, value):
-        if not isinstance(value, str):
+    @patterns.setter
+    def patterns(self, value):
+        if not isinstance(value, list):
             raise Exception
-        self._reg = re.compile(value)
+        for pattern in value:
+            self._reg.append(re.compile(pattern))
 
     def find_licenses(self, text):
-        items = re.findall(self._reg, text)
-        if not items:
+        result = []
+        for reg in self._reg:
+            items = re.findall(reg, text)
+            if items:
+                result.extend(items)
+
+        if not result:
             print("This text does not contain any license plates")
         else:
-            return items
+            return result
 
     @staticmethod
     def show_license_plates(licenses):
@@ -60,12 +66,15 @@ class License:
 
 
 def main():
-    l = License()
 
-    licenses = l.find_licenses('A RegEx, AA1234BB, or Regular Expression, 12 123-45AB, is a sequence 12 123-45AB of \
-    characters that forms a search pattern a12345BC')
+    license = License([r'[A-Z]{2}\d{4}[A-Z]{2}', r'\d{2}\s\d{3}\-\d{2}[A-Z]{2}', r'[a-z]\d{5}[A-Z]{2}'])
 
-    l.show_license_plates(licenses)
+    licenses = license.find_licenses('A RegEx, AA1234BB, or Regular Expression, 12 123-45AB, is a sequence \
+              12 123-45AB of characters that forms a search pattern a12345BC')
+    if licenses is None:
+        return
+
+    license.show_license_plates(licenses)
 
 
 if __name__ == '__main__':
