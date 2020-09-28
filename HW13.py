@@ -7,10 +7,11 @@ import re
 
 def main():
     def find_license(string):
-        pattern = r'^\w{1,2}.\d{3}.\w{1,4}$'
-        regexp = re.compile(pattern)
-        if re.search(regexp, string):
-            return string
+        patterns = [r'^[A-Z]{2}\d{4}[A-Z]{2}$', r'^\d{2}\s\d{3}\-\d{2}[A-Z]{2}$', r'^[a-z]\d{5}[A-Z]{2}$']
+        for pattern in patterns:
+            regexp = re.compile(pattern)
+            if re.search(regexp, string):
+                return string
 
     print(find_license('AA1234BB'))
     print(find_license('12 123-45AB'))
